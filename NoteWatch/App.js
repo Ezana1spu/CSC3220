@@ -3,7 +3,6 @@ import React, {useState, useEffect} from "react";
 import { StyleSheet, Text, View } from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import StackNavigator from "./StackNavigator";
-import * as SQLite from "expo-sqLite"; 
 
 export default function App() {
   return (

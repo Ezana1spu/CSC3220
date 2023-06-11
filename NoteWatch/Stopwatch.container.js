@@ -1,6 +1,7 @@
 import  React, {Component} from 'react';
 import {useNavigation} from "@react-navigation/native";
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import moment from "mement";
 import ListComponent from "./list.component";
 
 let padToTwo = (number) => (number <= 9 ? `0${number}`: number);
@@ -16,12 +17,22 @@ class StopwatchContainer extends Component {
             msec: 0
         }
 
+        this.newRun = 0;
+        this.runID = null;
+
         this.lapArr = [];
 
         this.interval = null;
     }
 
     handleToggle = () => {
+
+        if (this.newRun == 0) {
+            this.newRun = 1;
+            db.transaction(tx => {tx.executeSql('CREATE TABLE IF NOT EXISTS Day')})
+            runID = db.transaction(tx => {tx.executeSql('CREATE TABLE IF NOT EXISTS Run')})
+        }
+
         this.setState(
             {
                 start: !this.state.start
@@ -92,9 +103,15 @@ class StopwatchContainer extends Component {
 
 
                 <View style={styles.buttonParent}>
-                    <TouchableOpacity style={styles.button} onPress={this.handleReset}><Text style={styles.buttonText}>Reset</Text></TouchableOpacity>
-                    <TouchableOpacity style={styles.button} onPress={this.handleToggle}><Text style={styles.buttonText}>{!this.state.start? 'Start': 'Stop'}</Text></TouchableOpacity>
-                    <TouchableOpacity style={styles.button} onPress={()=>this.handleLap(this.state.min, this.state.sec, this.state.msec)} disabled={!this.state.start}><Text style={styles.buttonText}>Lap</Text></TouchableOpacity>
+                    <TouchableOpacity style={styles.button} onPress={this.handleReset}>
+                        <Text style={styles.buttonText}>Reset</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.button} onPress={this.handleToggle}>
+                        <Text style={styles.buttonText}>{!this.state.start? 'Start': 'Stop'}</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.button} onPress={()=>this.handleLap(this.state.min, this.state.sec, this.state.msec)} disabled={!this.state.start}>
+                        <Text style={styles.buttonText}>Lap</Text>
+                    </TouchableOpacity>
                 </View>
             <View style={styles.list}>
                 <ListComponent lap={this.lapArr} />
