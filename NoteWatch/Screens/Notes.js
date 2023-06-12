@@ -1,9 +1,33 @@
-import React from "react"
+import React, {useState, useEffect} from "react";
 import {useNavigation} from "@react-navigation/native";
 import {View, Text, SafeAreaView, Button, StyleSheet, TouchableOpacity, TextInput, FlatList, ScrollView} from "react-native";
+import DateTimePicker from "@react-native-community/datetimepicker"
 
 const Notes = () => {
     const navigation = useNavigation();
+
+    const [date, setDate] = useState(new Date());
+    const [showPicker, setShowPicker] = useState(false);
+    const [tableDate, settableDate] = useState (date.toDateString());
+    const toggleDatepicker = () => {
+        setShowPicker(!showPicker);
+    }
+    const onChange = ({type}, selectedDate) => {
+        if (type == "set"){
+            const currentDate = selectedDate;
+            setDate(currentDate);
+            //get info from Database
+            //toggleDatepicker();
+        }else{
+            toggleDatepicker();
+        }
+    } 
+
+    const confirmDate = () => {
+        settableDate(date.toDateString());
+        toggleDatepicker();
+    }
+
     return (
         <View style={style.main}>
             <View style={style.Top}>
@@ -13,10 +37,41 @@ const Notes = () => {
                     </View>
                 </TouchableOpacity> 
 
-                <Text style={style.date} >00/00/00</Text>
 
-                <Text style={style.calender}>calender</Text>
+                <View>
+                    {showPicker &&(
+                        <DateTimePicker mode="date" display="spinner" value={date} onChange={onChange} style ={style.buttonDate}/>
+                    )}
+                    {showPicker &&(
+                        <View style={{flexDirection:"row", justifyContent: "space-around"}}>
+                            <TouchableOpacity onPress={toggleDatepicker}>
+                                <Text>Cancel</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity onPress={confirmDate}>
+                                <Text>Confirm</Text>
+                            </TouchableOpacity>
+
+                        </View>
+                    )}
+                    {!showPicker &&(
+                        <TouchableOpacity onPress={toggleDatepicker}>
+                            <TextInput style={style.calender1} placeholder="date" onChangeText={settableDate} value={tableDate} editable={false} onPressIn={toggleDatepicker}/>
+                        </TouchableOpacity>
+                    )}
+                </View>
+            
+{/*                 {showPicker &&(
+                    <DateTimePicker mode="date" value ={date} display="spinner" onChange={onChange}/>
+                )} 
+
+                {showPicker &&(
+                    <TouchableOpacity onPress={toggleDatepicker}>
+                        <TextInput style={style.calender1} placeholder={date} value={date} editable={false} />
+                    </TouchableOpacity> 
+                )} */}
+                {/* <Text style={style.calender}>calender</Text> */}
             </View>
+
 
             <View style={style.runBox}>
                 {/* <FlatList
@@ -29,13 +84,12 @@ const Notes = () => {
                 /> */}
             </View>
 
-             <View style={style.noteContainer}>
+            <View style={style.noteContainer}>
                 <ScrollView style={style.noteBox}>
                     <TextInput multiline={true}> Type here
                     </TextInput>
                 </ScrollView>
-                        
-                    
+       
             </View> 
         </View>
     )
@@ -59,6 +113,13 @@ const style = StyleSheet.create({
         marginTop: 50,
         padding: 20,
         backgroundColor: 'red',
+    },
+    calender1:{
+        marginTop: 50,
+    },
+    buttonDate:{
+        height: 120,
+        marginTop: 10,
     },
     date:{
         flex:3,
@@ -87,7 +148,7 @@ const style = StyleSheet.create({
     },
     noteContainer:
     {
-        flex:5,
+        flex:2,
     },
     noteBox:{
         flex:1,
