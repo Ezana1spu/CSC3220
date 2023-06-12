@@ -1,8 +1,9 @@
 import  React, {Component} from 'react';
 import {useNavigation} from "@react-navigation/native";
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
-//import moment from "mement";
+import { StyleSheet, Text, View, TouchableOpacity, TextInput, Button} from 'react-native';
 import ListComponent from "./list.component";
+import * as SQLite from 'expo-sqlite'
+import { useState, useEffect} from 'react';
 
 let padToTwo = (number) => (number <= 9 ? `0${number}`: number);
 
@@ -22,6 +23,30 @@ class StopwatchContainer extends Component {
 
         this.lapArr = [];
 
+        const db = SQLite.openDatabase('stopwatch.db'); // Open the SQLite database
+        const [loading, setLoading] = useState(true);
+        const [dates, setDates] = useState([])
+        const [currentDate, setCurrentDate] = useState(undefined);
+        const [runs, setRuns] = useState([])
+        const [currentRun, setCurrentRun] = useState(undefined);
+        const [Laps, setLaps] = useState([])
+        const [currentLap, setCurrentLap] = useState(undefined);
+        const [notes, setNotes] = useState([])
+        const [currentNote, setCurrentNote] = useState(undefined);
+
+
+        this.db.transaction((tx) => {
+          tx.executeSql(
+            'CREATE TABLE IF NOT EXISTS Day (id INTEGER PRIMARY KEY AUTOINCREMENT, date TEXT)'
+          ); // Create the Day table if it doesn't exist
+          tx.executeSql(
+            'CREATE TABLE IF NOT EXISTS Run (id INTEGER PRIMARY KEY AUTOINCREMENT, dayId INTEGER, note TEXT)'
+          ); // Create the Run table if it doesn't exist
+          tx.executeSql(
+            'CREATE TABLE IF NOT EXISTS Lap (id INTEGER PRIMARY KEY AUTOINCREMENT, runId INTEGER, min INTEGER, sec INTEGER, msec INTEGER, note Text)'
+          ); // Create the Lap table if it doesn't exist
+        });
+
         this.interval = null;
     }
 
@@ -29,8 +54,8 @@ class StopwatchContainer extends Component {
 
         if (this.newRun == 0) {
             this.newRun = 1;
-            db.transaction(tx => {tx.executeSql('CREATE TABLE IF NOT EXISTS Day')})
-            runID = db.transaction(tx => {tx.executeSql('CREATE TABLE IF NOT EXISTS Run')})
+        
+            this.interval = null;
         }
 
         this.setState(
