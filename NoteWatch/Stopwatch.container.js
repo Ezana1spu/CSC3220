@@ -1,7 +1,7 @@
 import  React, {Component} from 'react';
 import {useNavigation} from "@react-navigation/native";
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
-import moment from "mement";
+//import moment from "mement";
 import ListComponent from "./list.component";
 
 let padToTwo = (number) => (number <= 9 ? `0${number}`: number);
