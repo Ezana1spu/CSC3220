@@ -1,8 +1,9 @@
 import  React, {Component} from 'react';
 import {useNavigation} from "@react-navigation/native";
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
-//import moment from "mement";
+import { StyleSheet, Text, View, TouchableOpacity, TextInput, Button} from 'react-native';
 import ListComponent from "./list.component";
+import * as SQLite from 'expo-sqlite'
+import { useState, useEffect} from 'react';
 
 let padToTwo = (number) => (number <= 9 ? `0${number}`: number);
 
@@ -18,20 +19,19 @@ class StopwatchContainer extends Component {
         }
 
         this.newRun = 0;
-        this.runID = 0;
+        this.runID = null;
 
         this.lapArr = [];
-
         this.interval = null;
     }
 
     handleToggle = () => {
 
-        /* if (this.newRun == 0) {
+        if (this.newRun == 0) {
             this.newRun = 1;
-            db.transaction(tx => {tx.executeSql('CREATE TABLE IF NOT EXISTS Day')})
-            runID = db.transaction(tx => {tx.executeSql('CREATE TABLE IF NOT EXISTS Run')})
-        } */
+        
+            this.interval = null;
+        }
 
         this.setState(
             {
@@ -85,7 +85,7 @@ class StopwatchContainer extends Component {
         });
 
         clearInterval(this.interval);
-        this.newRun = 0;
+
         this.lapArr = [];
     };
 
@@ -128,7 +128,6 @@ const styles = StyleSheet.create({
     list:{
         flex:0,
         marginBottom: 80,
-        backgroundColor: "#F5990A",
     },
     button1:{
         marginTop: 80,
@@ -147,18 +146,21 @@ const styles = StyleSheet.create({
     parent: {
         marginTop: 50,
         marginLeft: 20,
-        //marginRight: 40,
         display: "flex",
         flexDirection: "row",
-        backgroundColor: "#F5990A",
+        color: '#0A66F5',
+        backgroundColor: '#black',
+        //paddingLeft: "3%",
+        //paddingRight: "0%",
         paddingTop: "1%",
         paddingBottom: "1%",
+        //maxWidth: "70%"
     },
 
     child: {
-      fontSize: 56,
+      fontSize: 60,
       fontWeight: "bold",
-      color: '#0A66F5',
+      color: "#0A66F5",
     },
 
     buttonParent: {
@@ -170,16 +172,15 @@ const styles = StyleSheet.create({
     },
 
     button: {
-
+        backgroundColor: '#0A66F5',
         paddingTop: "4%",
         paddingLeft: "5%",
         paddingRight: "5%",
         display: "flex",
         borderRadius: 100,
         borderWidth: 1,
-        height: 60,
-        backgroundColor: "#0A66F5",
         borderColor: '#0A66F5',
+        height: 60,
     },
 
     buttonText: {

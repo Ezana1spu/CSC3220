@@ -78,7 +78,7 @@ const Notes = () => {
                 <ScrollView style={style.noteBox} keyboardShouldPersistTaps="handled">
                     <TextInput multiline={true} onSubmitEditing={Keyboard.dismiss}> Type here </TextInput>
                     <TouchableOpacity onPress={Keyboard.dismiss} style={style.ContainerButton}>
-                        <Text style={style.Button3}> Done </Text>
+                        <Text style={style.Button3}> Save Notes </Text>
                     </TouchableOpacity>
                 </ScrollView>
                 </ScrollView>
