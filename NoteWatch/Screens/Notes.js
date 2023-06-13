@@ -64,21 +64,22 @@ const Notes = () => {
 
 
             <View style={style.runBox}>
-                {/* <FlatList
-                    data = {}
+                <FlatList
                     renderItem={({ }) => (
                         <TouchableOpacity style={style.list}>
                             <Text></Text>
                         </TouchableOpacity>
                     )}
-                /> */}
+                /> 
             </View>
 
             <View style={style.noteContainer}>
-            <ScrollView style={style.noteBox1} keyboardShouldPersistTaps="handled">
+                <ScrollView style={style.noteBox1} keyboardShouldPersistTaps="handled">
                 <ScrollView style={style.noteBox} keyboardShouldPersistTaps="handled">
-                    <TextInput multiline={true} returnKeyType="done" onSubmitEditing={Keyboard.dismiss}> Type here
-                    </TextInput>
+                    <TextInput multiline={true} onSubmitEditing={Keyboard.dismiss}> Type here </TextInput>
+                    <TouchableOpacity onPress={Keyboard.dismiss} style={style.ContainerButton}>
+                        <Text style={style.Button3}> Done </Text>
+                    </TouchableOpacity>
                 </ScrollView>
                 </ScrollView>
             </View> 
@@ -123,7 +124,6 @@ const style = StyleSheet.create({
         borderWidth: 3,
         backgroundColor: "blue",
         color: "white",
-
     },
     calender1:{
         marginTop: 40,
@@ -162,7 +162,7 @@ const style = StyleSheet.create({
         backgroundColor: '#0A66F5',
     },
     list:{
-
+        backgroundColor: '#0A66F5',
     },
     noteContainer:
     {
@@ -170,12 +170,28 @@ const style = StyleSheet.create({
     },
     noteBox:{
         flex:3,
+        paddingTop: 10,
         borderWidth: 5,
         borderColor: "#F5990A",
+        //backgroundColor: '#0A66F5',
     },
     noteBox1:{
         flexGrow: 1,
-    }
+    },
+    ContainerButton: {
+        alignItems: 'center',
+        marginLeft:35,
+        marginRight:35,
+        marginTop: 10,
+        marginBottom: 15,
+        paddingVertical: 5,
+        backgroundColor: '#0A66F5',
+        borderRadius: 5,
+      },
+      Button3: {
+        color: 'white',
+        fontWeight: 'bold',
+      }
 })
 
 export default Notes
