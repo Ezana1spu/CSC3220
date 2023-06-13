@@ -20,7 +20,8 @@ class StopwatchContainer extends Component {
     this.state = {
       min: 0,
       sec: 0,
-      msec: 0
+      msec: 0,
+      start: false
     };
 
     this.newRun = 0;
@@ -62,42 +63,41 @@ class StopwatchContainer extends Component {
   handleToggle = () => {
     if (this.newRun === 0) {
       this.newRun = 1;
+      this.insertRun();
       this.interval = null;
     }
 
     this.setState(
-      {
-        start: !this.state.start
-      },
+      (prevState) => ({
+        start: !prevState.start
+      }),
       () => this.handleStart()
     );
   };
 
-  handleLap = (min, sec, msec) => {
-    this.lapArr = [
-      ...this.lapArr,
-      { min, sec, msec }
-    ];
+  handleLap = () => {
+    const { min, sec, msec } = this.state;
+    this.insertLap(min, sec, msec);
   };
 
   handleStart = () => {
     if (this.state.start) {
       this.interval = setInterval(() => {
         if (this.state.msec !== 99) {
-          this.setState({
-            msec: this.state.msec + 1
-          });
+          this.setState((prevState) => ({
+            msec: prevState.msec + 1
+          }));
         } else if (this.state.sec !== 59) {
-          this.setState({
+          this.setState((prevState) => ({
             msec: 0,
-            sec: ++this.state.sec
-          });
+            sec: prevState.sec + 1
+          }));
         } else {
-          this.setState({
+          this.setState((prevState) => ({
             msec: 0,
             sec: 0,
-            min: ++this.state.min
-          });
+            min: prevState.min + 1
+          }));
         }
       }, 1);
     } else {
@@ -116,53 +116,39 @@ class StopwatchContainer extends Component {
     clearInterval(this.interval);
 
     this.lapArr = [];
+
+    if (this.newRun === 1) {
+      this.newRun = 0;
+      this.insertRun();
+    }
   };
 
-  insertDay = (date, note) => {
-    db.transaction((tx) => {
-      tx.executeSql(
-        'INSERT INTO Day (date, note) VALUES (?, ?)',
-        [date, note],
-        (txObj, resultSet) => {
-          console.log('Day inserted successfully');
-          const dayId = resultSet.insertId;
-          this.insertRun(dayId);
-        },
-        (error) => console.log('Day insertion error:', error)
-      );
-    });
-  };
-
-  insertRun = (dayId) => {
+  insertRun = () => {
     const { min, sec, msec } = this.state;
 
     db.transaction((tx) => {
       tx.executeSql(
         'INSERT INTO Run (dayId, min, sec, msec) VALUES (?, ?, ?, ?)',
-        [dayId, min, sec, msec],
+        [this.runID, min, sec, msec],
         (txObj, resultSet) => {
           console.log('Run inserted successfully');
-          const runId = resultSet.insertId;
-          this.insertLap(runId);
+          this.runID = resultSet.insertId;
         },
         (error) => console.log('Run insertion error:', error)
       );
     });
   };
 
-  insertLap = (runId) => {
-    const { min, sec, msec } = this.state;
-
+  insertLap = (min, sec, msec) => {
     db.transaction((tx) => {
       tx.executeSql(
         'INSERT INTO Lap (runId, min, sec, msec) VALUES (?, ?, ?, ?)',
-        [runId, min, sec, msec],
+        [this.runID, min, sec, msec],
         (txObj, resultSet) => console.log('Lap inserted successfully'),
         (error) => console.log('Lap insertion error:', error)
       );
     });
   };
-
 
     render(){
         return(
