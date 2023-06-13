@@ -30,10 +30,6 @@ class StopwatchContainer extends Component {
     this.interval = null;
   }
 
-<<<<<<< Updated upstream
-        this.lapArr = [];
-        this.interval = null;
-=======
   componentDidMount() {
     this.initializeDatabase();
   }
@@ -67,7 +63,6 @@ class StopwatchContainer extends Component {
     if (this.newRun === 0) {
       this.newRun = 1;
       this.interval = null;
->>>>>>> Stashed changes
     }
 
     this.setState(
@@ -224,11 +219,12 @@ const styles = StyleSheet.create({
     },
     parent: {
         marginTop: 50,
-        marginLeft: 20,
+        marginLeft: 40,
+        marginRight: 40,
         display: "flex",
         flexDirection: "row",
-        color: '#0A66F5',
-        backgroundColor: '#black',
+        borderColor: "#000",
+        backgroundColor: 'black',
         //paddingLeft: "3%",
         //paddingRight: "0%",
         paddingTop: "1%",
@@ -237,9 +233,8 @@ const styles = StyleSheet.create({
     },
 
     child: {
-      fontSize: 60,
-      fontWeight: "bold",
-      color: "#0A66F5",
+      fontSize: 56,
+      color: "white",
     },
 
     buttonParent: {
@@ -251,14 +246,14 @@ const styles = StyleSheet.create({
     },
 
     button: {
-        backgroundColor: '#0A66F5',
+        backgroundColor: "#111",
         paddingTop: "4%",
         paddingLeft: "5%",
         paddingRight: "5%",
         display: "flex",
         borderRadius: 100,
         borderWidth: 1,
-        borderColor: '#0A66F5',
+        borderColor: "#fff",
         height: 60,
     },
 
