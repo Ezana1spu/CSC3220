@@ -18,7 +18,7 @@ class StopwatchContainer extends Component {
         }
 
         this.newRun = 0;
-        this.runID = null;
+        this.runID = 0;
 
         this.lapArr = [];
 
@@ -27,11 +27,11 @@ class StopwatchContainer extends Component {
 
     handleToggle = () => {
 
-        if (this.newRun == 0) {
+        /* if (this.newRun == 0) {
             this.newRun = 1;
             db.transaction(tx => {tx.executeSql('CREATE TABLE IF NOT EXISTS Day')})
             runID = db.transaction(tx => {tx.executeSql('CREATE TABLE IF NOT EXISTS Run')})
-        }
+        } */
 
         this.setState(
             {
@@ -85,7 +85,7 @@ class StopwatchContainer extends Component {
         });
 
         clearInterval(this.interval);
-
+        this.newRun = 0;
         this.lapArr = [];
     };
 
@@ -128,6 +128,7 @@ const styles = StyleSheet.create({
     list:{
         flex:0,
         marginBottom: 80,
+        backgroundColor: "#F5990A",
     },
     button1:{
         marginTop: 80,
@@ -145,22 +146,19 @@ const styles = StyleSheet.create({
     },
     parent: {
         marginTop: 50,
-        marginLeft: 40,
-        marginRight: 40,
+        marginLeft: 20,
+        //marginRight: 40,
         display: "flex",
         flexDirection: "row",
-        borderColor: "#000",
-        backgroundColor: 'black',
-        //paddingLeft: "3%",
-        //paddingRight: "0%",
+        backgroundColor: "#F5990A",
         paddingTop: "1%",
         paddingBottom: "1%",
-        //maxWidth: "70%"
     },
 
     child: {
       fontSize: 56,
-      color: "white",
+      fontWeight: "bold",
+      color: '#0A66F5',
     },
 
     buttonParent: {
@@ -172,15 +170,16 @@ const styles = StyleSheet.create({
     },
 
     button: {
-        backgroundColor: "#111",
+
         paddingTop: "4%",
         paddingLeft: "5%",
         paddingRight: "5%",
         display: "flex",
         borderRadius: 100,
         borderWidth: 1,
-        borderColor: "#fff",
         height: 60,
+        backgroundColor: "#0A66F5",
+        borderColor: '#0A66F5',
     },
 
     buttonText: {

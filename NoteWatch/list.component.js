@@ -17,22 +17,21 @@ class ListComponent extends Component {
 const styles = StyleSheet.create({
     container: {
         width: Dimensions.get('window').width,
-        backgroundColor: "black",
-        borderColor: "grey",
+        backgroundColor: '#0A66F5',
+        borderColor: '#0A66F5',
         padding: 0,
     },
 
     item: {
         padding: 10,
-        borderTopColor: "white",
-        borderBottomColor: "white",
+        borderColor: '#0A66F5',
         borderWidth: 1,
         borderStyle: "solid",
         fontSize: 22,
         height: 50,
         color: "#fff",
         textAlign: "auto",
-        backgroundColor: "black",
+        backgroundColor: '#0A66F5',
         marginBottom: 0,
     },
 })

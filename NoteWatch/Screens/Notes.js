@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from "react";
 import {useNavigation} from "@react-navigation/native";
-import {View, Text, SafeAreaView, Button, StyleSheet, TouchableOpacity, TextInput, FlatList, ScrollView} from "react-native";
+import {View, Text, SafeAreaView, Button, StyleSheet, TouchableOpacity, TextInput, FlatList, ScrollView, 
+    KeyboardAvoidingView, Keyboard} from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker"
 
 const Notes = () => {
@@ -8,7 +9,7 @@ const Notes = () => {
 
     const [date, setDate] = useState(new Date());
     const [showPicker, setShowPicker] = useState(false);
-    const [tableDate, settableDate] = useState (date.toDateString());
+    const [tableDate, settableDate] = useState (date.toLocaleDateString(('en-GB')));
     const toggleDatepicker = () => {
         setShowPicker(!showPicker);
     }
@@ -24,52 +25,41 @@ const Notes = () => {
     } 
 
     const confirmDate = () => {
-        settableDate(date.toDateString());
+        settableDate(date.toLocaleDateString(('en-GB')));
         toggleDatepicker();
     }
 
     return (
+        <KeyboardAvoidingView style={style.container} behavior="height">
         <View style={style.main}>
             <View style={style.Top}>
                  <TouchableOpacity onPress={() => navigation.navigate("Stopwatch")}>
-                    <View>
-                        <Text style={style.button1}>Stop</Text>
+                    <View style={style.buttonContainer1}>
+                        <Text style={style.button1}>Stopwatch</Text>
                     </View>
                 </TouchableOpacity> 
 
-
                 <View>
                     {showPicker &&(
-                        <DateTimePicker mode="date" display="spinner" value={date} onChange={onChange} style ={style.buttonDate}/>
+                        <DateTimePicker dateFormat="dd/mm/yyyy" mode="date" display="spinner" value={date} onChange={onChange} style ={style.buttonDate}/>
                     )}
                     {showPicker &&(
                         <View style={{flexDirection:"row", justifyContent: "space-around"}}>
                             <TouchableOpacity onPress={toggleDatepicker}>
-                                <Text>Cancel</Text>
+                                <Text style={style.button2}>Cancel</Text>
                             </TouchableOpacity>
                             <TouchableOpacity onPress={confirmDate}>
-                                <Text>Confirm</Text>
+                                <Text style={style.button2}>Confirm</Text>
                             </TouchableOpacity>
 
                         </View>
                     )}
                     {!showPicker &&(
                         <TouchableOpacity onPress={toggleDatepicker}>
-                            <TextInput style={style.calender1} placeholder="date" onChangeText={settableDate} value={tableDate} editable={false} onPressIn={toggleDatepicker}/>
+                            <TextInput style={style.calender1} placeholder="date" onChangeText={settableDate} value={tableDate} editable={false}  onPressIn={toggleDatepicker}/>
                         </TouchableOpacity>
                     )}
                 </View>
-            
-{/*                 {showPicker &&(
-                    <DateTimePicker mode="date" value ={date} display="spinner" onChange={onChange}/>
-                )} 
-
-                {showPicker &&(
-                    <TouchableOpacity onPress={toggleDatepicker}>
-                        <TextInput style={style.calender1} placeholder={date} value={date} editable={false} />
-                    </TouchableOpacity> 
-                )} */}
-                {/* <Text style={style.calender}>calender</Text> */}
             </View>
 
 
@@ -85,20 +75,26 @@ const Notes = () => {
             </View>
 
             <View style={style.noteContainer}>
-                <ScrollView style={style.noteBox}>
-                    <TextInput multiline={true}> Type here
+            <ScrollView style={style.noteBox1} keyboardShouldPersistTaps="handled">
+                <ScrollView style={style.noteBox} keyboardShouldPersistTaps="handled">
+                    <TextInput multiline={true} returnKeyType="done" onSubmitEditing={Keyboard.dismiss}> Type here
                     </TextInput>
                 </ScrollView>
-       
+                </ScrollView>
             </View> 
         </View>
+        </KeyboardAvoidingView>
     )
 }
 const style = StyleSheet.create({
+    container: {
+        flex: 1,
+      },
     main:{
         flex:10,
         fontSize: 40,
         borderRadius: 30,
+        backgroundColor: "#F5990A",
     },
     
     Top:{
@@ -106,54 +102,79 @@ const style = StyleSheet.create({
         flexDirection: "row",
         padding: 20,
         alignItem: 'center',
-        justifyContent: 'space-between',
+        justifyContent: 'space-around',
+    },
+    buttonContainer1:{
+        height:90,
     },
     button1:{
+        fontSize: 25,
         flex:1,
-        marginTop: 50,
-        padding: 20,
-        backgroundColor: 'red',
+        marginTop: 40,
+        paddingTop: 10,
+        paddingRight: 5,
+        paddingLeft:5,
+        backgroundColor: '#0A66F5',
+        color: "white",
+    },
+    button2:{
+        fontSize: 12,
+        borderColor: "black",
+        borderWidth: 3,
+        backgroundColor: "blue",
+        color: "white",
+
     },
     calender1:{
-        marginTop: 50,
+        marginTop: 40,
+        fontSize: 40,
+        alignItems: "center",
+        alignContent: "center",
+        paddingLeft: 60,
+        fontWeight: "bold",
+        color:'#0A66F5',
     },
     buttonDate:{
         height: 120,
         marginTop: 10,
+        backgroundColor: "white",
+        color: "white",
+        
     },
     date:{
         flex:3,
         borderWidth: 1,
-        fontSize: 35,
         marginTop: 50,
         padding: 10,
-        //backgroundColor: 'blue',
         textAlign: 'center',
+        
     },
     calender:{
-        textAlign: 'right',
+        textAlign: 'right',  
         flex:1,
         marginTop: 50,
         padding: 20,
-        //backgroundColor: 'green',
     },
 
     runBox:{
         flex: 2,
         padding: 10,
-        backgroundColor: 'blue',
+        backgroundColor: '#0A66F5',
     },
     list:{
 
     },
     noteContainer:
     {
-        flex:2,
+        flex:3,
     },
     noteBox:{
-        flex:1,
+        flex:3,
         borderWidth: 5,
-        borderColor: "red",
+        borderColor: "#F5990A",
+    },
+    noteBox1:{
+        flexGrow: 1,
     }
 })
 
