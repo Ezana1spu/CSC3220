@@ -25,6 +25,7 @@ const Stopwatch = () => {
 const style = StyleSheet.create({
     Main:{
         flex: 6,
+        backgroundColor: "#F5990A",
     },
     button1:{
         marginTop: 80,
@@ -34,11 +35,13 @@ const style = StyleSheet.create({
         borderWidth: 10,
         textAlign: 'center',
         fontSize: 40,
-        backgroundColor: 'red',
-        borderColor: 'red',
+        backgroundColor: "#0A66F5",
+        borderColor: '#0A66F5',
+        color: "white",
     },
     button:{
         flex: 0,
+
     },
     box:{
         flex: 3,

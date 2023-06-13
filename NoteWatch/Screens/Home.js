@@ -8,11 +8,11 @@ const Home = () => {
 
     return (
         <SafeAreaView style={style.Main}>
-            <Text style={style.Title}>STOPWATCH & Notes</Text>
+            <Text style={style.Title}>STOPWATCH & NOTES</Text>
                 <View style={style. buttoncontainer}>
                     <TouchableOpacity onPress={() => navigation.navigate("Stopwatch")}>
                         <View>
-                            <Text style={style.button1}> Stop </Text>
+                            <Text style={style.button1}>Stopwatch</Text>
                         </View>
                     </TouchableOpacity>
 
@@ -32,12 +32,15 @@ const style = StyleSheet.create({
         marginTop: 50,
         textAlign: 'center',
         fontSize: 60,
+        fontWeight: "bold",
         flex: 2,
+        color: "#0A66F5",
     },
     Main:{
         fontSize: 40,
         flex: 6,
-        backgroundColor: 'orange',
+        backgroundColor: "#F5990A",
+        //backgroundColor: "#F5990A",
     },
     buttoncontainer:{
         fontSize: 40,
@@ -52,8 +55,9 @@ const style = StyleSheet.create({
         borderWidth: 10,
         textAlign: 'center',
         fontSize: 40,
-        backgroundColor: 'red',
-        borderColor: 'red',
+        backgroundColor: "#0A66F5",
+        borderColor: '#0A66F5',
+        color: "white",
     },
     button2:{
         marginTop: 50,
@@ -63,12 +67,14 @@ const style = StyleSheet.create({
         borderWidth: 10,
         textAlign: 'center',
         fontSize: 40,
-        backgroundColor: 'red',
-        borderColor: 'red',
+        backgroundColor: '#0A66F5',
+        borderColor: '#0A66F5',
+        color: "white",
     },
-    footnotes:{
-        flex: 1,
+    footnote:{
+        flex: 0,
         paddingLeft: 10,
+        color: '#0A66F5',
     },
 });
 
