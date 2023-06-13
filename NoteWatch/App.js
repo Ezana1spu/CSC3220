@@ -1,12 +1,16 @@
 import { StatusBar } from 'expo-status-bar';
-import React, {useState, useEffect} from "react";
 import { StyleSheet, Text, View } from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import StackNavigator from "./StackNavigator";
+<<<<<<< Updated upstream
 import * as SQLite from 'expo-sqlite'
 
 export default function App(){ 
 
+=======
+
+export default function App() {
+>>>>>>> Stashed changes
   return (
     <NavigationContainer>
       <StackNavigator/>

@@ -1,93 +1,172 @@
-import  React, {Component} from 'react';
 import {useNavigation} from "@react-navigation/native";
 import { StyleSheet, Text, View, TouchableOpacity, TextInput, Button} from 'react-native';
 import ListComponent from "./list.component";
-import * as SQLite from 'expo-sqlite'
-import { useState, useEffect} from 'react';
+import * as SQLite from 'expo-sqlite';
+import { useState, useEffect, Component} from 'react';
 
-let padToTwo = (number) => (number <= 9 ? `0${number}`: number);
+let padToTwo = (number) => (number <= 9 ? `0${number}` : number);
+
+function openDatabase() {
+  const db = SQLite.openDatabase("myDB.db");
+  return db;
+}
+
+const db = openDatabase();
 
 class StopwatchContainer extends Component {
+  constructor(props) {
+    super(props);
 
-    constructor(props){
-        super(props);
+    this.state = {
+      min: 0,
+      sec: 0,
+      msec: 0
+    };
 
-        this.state = {
-            min: 0,
-            sec: 0,
-            msec: 0
-        }
+    this.newRun = 0;
+    this.runID = null;
+    this.lapArr = [];
 
-        this.newRun = 0;
-        this.runID = null;
+    this.interval = null;
+  }
 
+<<<<<<< Updated upstream
         this.lapArr = [];
         this.interval = null;
+=======
+  componentDidMount() {
+    this.initializeDatabase();
+  }
+
+  initializeDatabase = () => {
+    db.transaction((tx) => {
+      tx.executeSql(
+        'CREATE TABLE IF NOT EXISTS Day (id INTEGER PRIMARY KEY AUTOINCREMENT, date TEXT, note TEXT)',
+        [],
+        () => console.log('Day table created successfully'),
+        (error) => console.log('Day table creation error:', error)
+      );
+
+      tx.executeSql(
+        'CREATE TABLE IF NOT EXISTS Run (id INTEGER PRIMARY KEY AUTOINCREMENT, dayId INTEGER, min INTEGER, sec INTEGER, msec INTEGER)',
+        [],
+        () => console.log('Run table created successfully'),
+        (error) => console.log('Run table creation error:', error)
+      );
+
+      tx.executeSql(
+        'CREATE TABLE IF NOT EXISTS Lap (id INTEGER PRIMARY KEY AUTOINCREMENT, runId INTEGER, min INTEGER, sec INTEGER, msec INTEGER)',
+        [],
+        () => console.log('Lap table created successfully'),
+        (error) => console.log('Lap table creation error:', error)
+      );
+    });
+  };
+
+  handleToggle = () => {
+    if (this.newRun === 0) {
+      this.newRun = 1;
+      this.interval = null;
+>>>>>>> Stashed changes
     }
 
-    handleToggle = () => {
+    this.setState(
+      {
+        start: !this.state.start
+      },
+      () => this.handleStart()
+    );
+  };
 
-        if (this.newRun == 0) {
-            this.newRun = 1;
-        
-            this.interval = null;
-        }
+  handleLap = (min, sec, msec) => {
+    this.lapArr = [
+      ...this.lapArr,
+      { min, sec, msec }
+    ];
+  };
 
-        this.setState(
-            {
-                start: !this.state.start
-            },
-            () => this.handleStart()
-        );
-    };
-
-    handleLap = (min, sec, msec) => {
-        this.lapArr = [
-            ...this.lapArr,
-            {min, sec, msec}
-        ]
-
-    };
-
-    handleStart = () => {
-        if (this.state.start) {
-            this.interval = setInterval(() => {
-                if (this.state.msec !== 99) {
-                    this.setState({
-                        msec: this.state.msec + 1
-                    });
-                } else if (this.state.sec !== 59) {
-                    this.setState({
-                        msec: 0,
-                        sec: ++this.state.sec
-                    });
-                } else {
-                    this.setState({
-                        msec: 0,
-                        sec: 0,
-                        min: ++this.state.min
-                    });
-                }
-            }, 1);
-
-        } else {
-            clearInterval(this.interval);
-        }
-    };
-
-    handleReset = () => {
-        this.setState({
-            min: 0,
-            sec: 0,
+  handleStart = () => {
+    if (this.state.start) {
+      this.interval = setInterval(() => {
+        if (this.state.msec !== 99) {
+          this.setState({
+            msec: this.state.msec + 1
+          });
+        } else if (this.state.sec !== 59) {
+          this.setState({
             msec: 0,
+            sec: ++this.state.sec
+          });
+        } else {
+          this.setState({
+            msec: 0,
+            sec: 0,
+            min: ++this.state.min
+          });
+        }
+      }, 1);
+    } else {
+      clearInterval(this.interval);
+    }
+  };
 
-            start: false
-        });
+  handleReset = () => {
+    this.setState({
+      min: 0,
+      sec: 0,
+      msec: 0,
+      start: false
+    });
 
-        clearInterval(this.interval);
+    clearInterval(this.interval);
 
-        this.lapArr = [];
-    };
+    this.lapArr = [];
+  };
+
+  insertDay = (date, note) => {
+    db.transaction((tx) => {
+      tx.executeSql(
+        'INSERT INTO Day (date, note) VALUES (?, ?)',
+        [date, note],
+        (txObj, resultSet) => {
+          console.log('Day inserted successfully');
+          const dayId = resultSet.insertId;
+          this.insertRun(dayId);
+        },
+        (error) => console.log('Day insertion error:', error)
+      );
+    });
+  };
+
+  insertRun = (dayId) => {
+    const { min, sec, msec } = this.state;
+
+    db.transaction((tx) => {
+      tx.executeSql(
+        'INSERT INTO Run (dayId, min, sec, msec) VALUES (?, ?, ?, ?)',
+        [dayId, min, sec, msec],
+        (txObj, resultSet) => {
+          console.log('Run inserted successfully');
+          const runId = resultSet.insertId;
+          this.insertLap(runId);
+        },
+        (error) => console.log('Run insertion error:', error)
+      );
+    });
+  };
+
+  insertLap = (runId) => {
+    const { min, sec, msec } = this.state;
+
+    db.transaction((tx) => {
+      tx.executeSql(
+        'INSERT INTO Lap (runId, min, sec, msec) VALUES (?, ?, ?, ?)',
+        [runId, min, sec, msec],
+        (txObj, resultSet) => console.log('Lap inserted successfully'),
+        (error) => console.log('Lap insertion error:', error)
+      );
+    });
+  };
 
 
     render(){
